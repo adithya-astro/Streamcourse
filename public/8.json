@@ -1,0 +1,241 @@
+{
+    "id": "c8",
+    "name": "3D Printing",
+    "modules": [
+        {
+            "id": "m1",
+            "name": "Module 1: The World of 3D Printing",
+            "chapters": [
+                {
+                    "id": "ch1-1",
+                    "title": "Overview of 3D Printing",
+                    "type": "youtube",
+                    "videoId": "yXNZ_2-rHNE"
+                },
+                {
+                    "id": "ch1-2",
+                    "title": "Sample Download File",
+                    "type": "pdf",
+                    "description": "Learn the fundamentals of Fused Deposition Modeling.",
+                    "url": "E-%2040%20sticker%20-%20print%20_%20Cut%20(2).pdf"
+                },
+                {
+                    "id": "ch1-3",
+                    "title": "Basic Task: Identify Printer Parts",
+                    "type": "task",
+                    "description": "Correctly label the extruder, build plate, and filament spool on the diagram."
+                },
+                {
+                    "id": "ch1-4",
+                    "title": "Assignment 1",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What file type is commonly used for music printing?",
+                            "a": [
+                                ".DOC",
+                                ".MP3",
+                                ".STL",
+                                ".JPG"
+                            ],
+                            "correct": ".MP3"
+                        },
+                        {
+                            "q": "What does 'FDM' stand for?",
+                            "a": [
+                                "Fused Deposition Modeling",
+                                "Fast Dimensional Manufacturing",
+                                "Future Design Method",
+                                "File Delivery Mode"
+                            ],
+                            "correct": "Fused Deposition Modeling"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m2",
+            "name": "Module 2: Your First Print",
+            "chapters": [
+                {
+                    "id": "ch2-1",
+                    "title": "Understanding Your Printer",
+                    "type": "youtube",
+                    "videoId": "yXNZ_2-rHNE"
+                },
+                {
+                    "id": "ch2-2",
+                    "title": "Download the STL file",
+                    "type": "download",
+                    "description": "Download the test model STL file to prepare for printing.",
+                    "fileName": "Part 4 (1).stl",
+                    "url": "Part%204%20(1).stl"
+                },
+                {
+                    "id": "ch2-3",
+                    "title": "Assignment 2",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What is the typical printing temperature for PLA filament?",
+                            "a": [
+                                "150-180°C",
+                                "190-220°C",
+                                "240-270°C",
+                                "Above 300°C"
+                            ],
+                            "correct": "190-220°C"
+                        },
+                        {
+                            "q": "What is a common bed temperature for printing PLA?",
+                            "a": [
+                                "25°C (Room Temp)",
+                                "60°C",
+                                "110°C",
+                                "150°C"
+                            ],
+                            "correct": "60°C"
+                        },
+                        {
+                            "q": "Which of the following is a flexible filament?",
+                            "a": [
+                                "PLA",
+                                "ABS",
+                                "PETG",
+                                "TPU"
+                            ],
+                            "correct": "TPU"
+                        },
+                        {
+                            "q": "What is the process of converting a 3D model (STL) into printer instructions (G-code) called?",
+                            "a": [
+                                "Rendering",
+                                "Slicing",
+                                "Extruding",
+                                "Modeling"
+                            ],
+                            "correct": "Slicing"
+                        },
+                        {
+                            "q": "What file format does a 3D printer directly read to print an object?",
+                            "a": [
+                                ".STL",
+                                ".OBJ",
+                                ".GCODE",
+                                ".FBX"
+                            ],
+                            "correct": ".GCODE"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m3",
+            "name": "Module 3: Advanced Techniques",
+            "chapters": [
+                {
+                    "id": "ch3-1",
+                    "title": "Advanced Slicer Settings",
+                    "type": "youtube",
+                    "videoId": "gpm4Fmh_OOc"
+                },
+                {
+                    "id": "ch3-2",
+                    "title": "Troubleshooting Print Failures",
+                    "type": "pdf",
+                    "description": "A guide to fixing common issues like warping, stringing, and under-extrusion.",
+                    "url": "#"
+                },
+                {
+                    "id": "ch3-3",
+                    "title": "Assignment 3",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What setting controls the density of a print?",
+                            "a": [
+                                "Layer Height",
+                                "Infill",
+                                "Print Speed",
+                                "Retraction"
+                            ],
+                            "correct": "Infill"
+                        },
+                        {
+                            "q": "What does 'retraction' help prevent in a 3D print?",
+                            "a": [
+                                "Warping",
+                                "Poor Adhesion",
+                                "Stringing",
+                                "Cracking"
+                            ],
+                            "correct": "Stringing"
+                        },
+                        {
+                            "q": "Increasing layer height will do what?",
+                            "a": [
+                                "Increase print time, decrease quality",
+                                "Decrease print time, decrease quality",
+                                "Increase print time, increase quality",
+                                "Decrease print time, increase quality"
+                            ],
+                            "correct": "Decrease print time, decrease quality"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m4",
+            "name": "Module 4: Final Project",
+            "chapters": [
+                {
+                    "id": "ch4-1",
+                    "title": "Final Project Brief",
+                    "type": "pdf",
+                    "description": "Download the brief for your final project.",
+                    "url": "#"
+                },
+                {
+                    "id": "ch4-2",
+                    "title": "Final Assignment",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "Which step is most important for a successful print?",
+                            "a": [
+                                "A cool room",
+                                "A fast computer",
+                                "A level bed",
+                                "A bright light"
+                            ],
+                            "correct": "A level bed"
+                        },
+                        {
+                            "q": "What is a 'brim' used for in 3D printing?",
+                            "a": [
+                                "To make the print shiny",
+                                "To improve bed adhesion",
+                                "To cool the filament",
+                                "To change color"
+                            ],
+                            "correct": "To improve bed adhesion"
+                        },
+                        {
+                            "q": "An STL file contains what kind of information?",
+                            "a": [
+                                "The color of the model",
+                                "The geometry of the model",
+                                "The printer temperature settings",
+                                "The speed of printing"
+                            ],
+                            "correct": "The geometry of the model"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

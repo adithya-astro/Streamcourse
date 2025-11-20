@@ -1,0 +1,38 @@
+[
+    {
+        "id": "team0",
+        "school": {
+            "id": "globalpublicschool",
+            "name": "Global Public School"
+        },
+        "schoolLocation": "Kochi",
+        "class": "8",
+        "teamName": "The Innovators",
+        "students": [
+            "Arun Kumar",
+            "Priya Sharma",
+            "David John"
+        ]
+    },
+    {
+        "id": "team1",
+        "school": {
+            "id": "chinmayavidyalaya",
+            "name": "Chinmaya Vidyalaya"
+        },
+        "schoolLocation": "Thrissur",
+        "class": "6",
+        "teamName": "The Microbe Hunters",
+        "students": [
+            "Amal",
+            "Adithya",
+            "Ribin",
+            "Jith",
+            "Rimju",
+            "Shinu",
+            "Rhithu",
+            "Varsha",
+            "Ananya"
+        ]
+    }
+]

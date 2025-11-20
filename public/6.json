@@ -1,0 +1,234 @@
+{
+    "id": "c6",
+    "name": "Microorganisms",
+    "modules": [
+        {
+            "id": "m1",
+            "name": "Module 1: Intro to the Microscopic World",
+            "chapters": [
+                {
+                    "id": "ch1-1",
+                    "title": "Overview of the Course",
+                    "type": "video"
+                },
+                {
+                    "id": "ch1-2",
+                    "title": "What is a Microbe? (PDF)",
+                    "type": "pdf",
+                    "description": "A detailed document about different types of microorganisms.",
+                    "url": "#"
+                },
+                {
+                    "id": "ch1-3",
+                    "title": "Basic Task: Identifying Microbes",
+                    "type": "task",
+                    "description": "Look at the following images and identify the bacteria, fungi, and viruses."
+                },
+                {
+                    "id": "ch1-4",
+                    "title": "Assignment 1",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "Which of these is NOT a microorganism?",
+                            "a": [
+                                "Bacteria",
+                                "Virus",
+                                "Insect",
+                                "Fungus"
+                            ],
+                            "correct": "Insect"
+                        },
+                        {
+                            "q": "What instrument is used to see most microbes?",
+                            "a": [
+                                "Telescope",
+                                "Microscope",
+                                "Binoculars",
+                                "Magnifying Glass"
+                            ],
+                            "correct": "Microscope"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m2",
+            "name": "Module 2: The Microscope",
+            "chapters": [
+                {
+                    "id": "ch2-1",
+                    "title": "Parts of a Microscope",
+                    "type": "pdf",
+                    "description": "Learn to identify all the key parts of a compound microscope, from the eyepiece to the illuminator.",
+                    "url": "#"
+                },
+                {
+                    "id": "ch2-2",
+                    "title": "Assignment 2: Know Your Scope",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "Which part do you look through at the top of the microscope?",
+                            "a": [
+                                "Objective Lens",
+                                "Eyepiece",
+                                "Diaphragm",
+                                "Stage"
+                            ],
+                            "correct": "Eyepiece"
+                        },
+                        {
+                            "q": "What holds the slide in place?",
+                            "a": [
+                                "Stage clips",
+                                "Focus knob",
+                                "Arm",
+                                "Base"
+                            ],
+                            "correct": "Stage clips"
+                        },
+                        {
+                            "q": "Which knob is used for major adjustments in focus?",
+                            "a": [
+                                "Fine adjustment knob",
+                                "Coarse adjustment knob",
+                                "Diaphragm lever",
+                                "Revolving nosepiece"
+                            ],
+                            "correct": "Coarse adjustment knob"
+                        },
+                        {
+                            "q": "The lenses closest to the specimen are called:",
+                            "a": [
+                                "Ocular lenses",
+                                "Eyepieces",
+                                "Objective lenses",
+                                "Condenser lenses"
+                            ],
+                            "correct": "Objective lenses"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m3",
+            "name": "Module 3: Using the Microscope",
+            "chapters": [
+                {
+                    "id": "ch3-1",
+                    "title": "How to Use a Microscope",
+                    "type": "task",
+                    "description": "A step-by-step guide on safely handling and using the microscope for the first time."
+                },
+                {
+                    "id": "ch3-2",
+                    "title": "Sample Preparation",
+                    "type": "youtube",
+                    "videoId": "vEy_t_1Q51k",
+                    "description": "Watch this video to learn the basics of preparing a wet mount slide."
+                },
+                {
+                    "id": "ch3-3",
+                    "title": "Focusing Techniques",
+                    "type": "task",
+                    "description": "Learn the proper technique for bringing a specimen into sharp focus using the coarse and fine adjustment knobs."
+                },
+                {
+                    "id": "ch3-4",
+                    "title": "Introduction to Staining",
+                    "type": "task",
+                    "description": "Staining adds contrast to a specimen, making it easier to see. This chapter covers the basic principles of why and how we stain microbes."
+                },
+                {
+                    "id": "ch3-5",
+                    "title": "Assignment 3",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What is the first step when preparing a wet mount?",
+                            "a": [
+                                "Add a coverslip",
+                                "Add the specimen",
+                                "Add a drop of water to the slide",
+                                "Focus the microscope"
+                            ],
+                            "correct": "Add a drop of water to the slide"
+                        },
+                        {
+                            "q": "Why is staining useful in microscopy?",
+                            "a": [
+                                "It cleans the slide",
+                                "It increases magnification",
+                                "It adds contrast to the specimen",
+                                "It feeds the microbes"
+                            ],
+                            "correct": "It adds contrast to the specimen"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m4",
+            "name": "Module 4: Final Project",
+            "chapters": [
+                {
+                    "id": "ch4-1",
+                    "title": "Project: Backyard Microbe Safari",
+                    "type": "task",
+                    "description": "Your final project is to collect a water sample from your school backyard (like from a puddle, pond, or even damp soil), prepare a slide, and see what you can find! Use the checklist below to identify common microorganisms. Good luck, explorers!",
+                    "checklist": [
+                        "Nematodes",
+                        "Rotifer",
+                        "Mosquito larvae",
+                        "Midge fly larvae",
+                        "Tardigrade",
+                        "Paramecium",
+                        "Amoeba",
+                        "Euglena",
+                        "Diatoms",
+                        "Clostridium",
+                        "Spirostomum",
+                        "Spirogyra",
+                        "Bacteria",
+                        "Collops",
+                        "Loxodes",
+                        "Hydra",
+                        "Copepod",
+                        "Others"
+                    ]
+                },
+                {
+                    "id": "ch4-2",
+                    "title": "Final Assignment",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "Which of these is a protozoan?",
+                            "a": [
+                                "Spirogyra",
+                                "Diatom",
+                                "Amoeba",
+                                "Nematode"
+                            ],
+                            "correct": "Amoeba"
+                        },
+                        {
+                            "q": "Tardigrades are famous for being...",
+                            "a": [
+                                "Very fast",
+                                "Extremely resilient",
+                                "Brightly colored",
+                                "Very large"
+                            ],
+                            "correct": "Extremely resilient"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

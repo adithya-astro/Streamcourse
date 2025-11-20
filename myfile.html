@@ -1,0 +1,748 @@
+import React, { useState, useEffect, createContext, useContext } from 'react';
+
+// --- DATABASE & MOCK DATA ---
+// In a real app, this data would come from a Firestore database.
+const initialCourses = {
+    '6': { id: 'c6', name: 'Microorganisms', modules: [
+        { id: 'm1', name: 'Module 1: Intro to the Microscopic World', chapters: [
+            { id: 'ch1-1', title: 'Overview of the Course', type: 'video' },
+            { id: 'ch1-2', title: 'What is a Microbe? (PDF)', type: 'pdf', description: 'A detailed document about different types of microorganisms.', url: '#' },
+            { id: 'ch1-3', title: 'Basic Task: Identifying Microbes', type: 'task', description: 'Look at the following images and identify the bacteria, fungi, and viruses.' },
+            { id: 'ch1-4', title: 'Assignment 1', type: 'quiz', questions: [
+                { q: 'Which of these is NOT a microorganism?', a: ['Bacteria', 'Virus', 'Insect', 'Fungus'], correct: 'Insect' },
+                { q: 'What instrument is used to see most microbes?', a: ['Telescope', 'Microscope', 'Binoculars', 'Magnifying Glass'], correct: 'Microscope' },
+            ]},
+        ]},
+        { id: 'm2', name: 'Module 2: The Microscope', chapters: [ 
+            { id: 'ch2-1', title: 'Parts of a Microscope', type: 'pdf', description: 'Learn to identify all the key parts of a compound microscope, from the eyepiece to the illuminator.', url: '#' },
+            { id: 'ch2-2', title: 'Assignment 2: Know Your Scope', type: 'quiz', questions: [
+                { q: 'Which part do you look through at the top of the microscope?', a: ['Objective Lens', 'Eyepiece', 'Diaphragm', 'Stage'], correct: 'Eyepiece' },
+                { q: 'What holds the slide in place?', a: ['Stage clips', 'Focus knob', 'Arm', 'Base'], correct: 'Stage clips' },
+                { q: 'Which knob is used for major adjustments in focus?', a: ['Fine adjustment knob', 'Coarse adjustment knob', 'Diaphragm lever', 'Revolving nosepiece'], correct: 'Coarse adjustment knob' },
+                { q: 'The lenses closest to the specimen are called:', a: ['Ocular lenses', 'Eyepieces', 'Objective lenses', 'Condenser lenses'], correct: 'Objective lenses' },
+            ]}
+        ]},
+        { id: 'm3', name: 'Module 3: Using the Microscope', chapters: [
+            { id: 'ch3-1', title: 'How to Use a Microscope', type: 'task', description: 'A step-by-step guide on safely handling and using the microscope for the first time.'},
+            { id: 'ch3-2', title: 'Sample Preparation', type: 'youtube', videoId: 'vEy_t_1Q51k', description: 'Watch this video to learn the basics of preparing a wet mount slide.' },
+            { id: 'ch3-3', title: 'Focusing Techniques', type: 'task', description: 'Learn the proper technique for bringing a specimen into sharp focus using the coarse and fine adjustment knobs.'},
+            { id: 'ch3-4', title: 'Introduction to Staining', type: 'task', description: 'Staining adds contrast to a specimen, making it easier to see. This chapter covers the basic principles of why and how we stain microbes.'},
+            { id: 'ch3-5', title: 'Assignment 3', type: 'quiz', questions: [
+                { q: 'What is the first step when preparing a wet mount?', a: ['Add a coverslip', 'Add the specimen', 'Add a drop of water to the slide', 'Focus the microscope'], correct: 'Add a drop of water to the slide' },
+                { q: 'Why is staining useful in microscopy?', a: ['It cleans the slide', 'It increases magnification', 'It adds contrast to the specimen', 'It feeds the microbes'], correct: 'It adds contrast to the specimen' },
+            ]}
+        ]},
+        { id: 'm4', name: 'Module 4: Final Project', chapters: [
+            { id: 'ch4-1', title: 'Project: Backyard Microbe Safari', type: 'task', description: 'Your final project is to collect a water sample from your school backyard (like from a puddle, pond, or even damp soil), prepare a slide, and see what you can find! Use the checklist below to identify common microorganisms. Good luck, explorers!', checklist: ['Nematodes', 'Rotifer', 'Mosquito larvae', 'Midge fly larvae', 'Tardigrade', 'Paramecium', 'Amoeba', 'Euglena', 'Diatoms', 'Clostridium', 'Spirostomum', 'Spirogyra', 'Bacteria', 'Collops', 'Loxodes', 'Hydra', 'Copepod', 'Others'] },
+            { id: 'ch4-2', title: 'Final Assignment', type: 'quiz', questions: [
+                { q: 'Which of these is a protozoan?', a: ['Spirogyra', 'Diatom', 'Amoeba', 'Nematode'], correct: 'Amoeba' },
+                { q: 'Tardigrades are famous for being...', a: ['Very fast', 'Extremely resilient', 'Brightly colored', 'Very large'], correct: 'Extremely resilient' },
+            ]}
+        ]}
+    ]},
+    '7': { id: 'c7', name: 'LED Repairing', modules: [ /* ... course data ... */ ]},
+    '8': { id: 'c8', name: '3D Printing', modules: [
+        { id: 'm1', name: 'Module 1: The World of 3D Printing', chapters: [
+            { id: 'ch1-1', title: 'Overview of 3D Printing', type: 'youtube', videoId: 'yXNZ_2-rHNE' },
+            { id: 'ch1-2', title: 'Sample Download File', type: 'pdf', description: 'Learn the fundamentals of Fused Deposition Modeling.', url: 'E-%2040%20sticker%20-%20print%20_%20Cut%20(2).pdf' },
+            { id: 'ch1-3', title: 'Basic Task: Identify Printer Parts', type: 'task', description: 'Correctly label the extruder, build plate, and filament spool on the diagram.' },
+            { id: 'ch1-4', title: 'Assignment 1', type: 'quiz', questions: [
+                { q: 'What file type is commonly used for 3D printing?', a: ['.DOC', '.MP3', '.STL', '.JPG'], correct: '.STL' },
+                { q: 'What does "FDM" stand for?', a: ['Fused Deposition Modeling', 'Fast Dimensional Manufacturing', 'Future Design Method', 'File Delivery Mode'], correct: 'Fused Deposition Modeling' },
+            ]},
+        ]},
+        { id: 'm2', name: 'Module 2: Your First Print', chapters: [
+             { id: 'ch2-1', title: 'Understanding Your Printer', type: 'youtube', videoId: 'yXNZ_2-rHNE' },
+             { id: 'ch2-2', title: 'Download the STL file', type: 'download', description: 'Download the test model STL file to prepare for printing.', fileName: 'Part 4 (1).stl', url: 'Part%204%20(1).stl' },
+             { id: 'ch2-3', title: 'Assignment 2', type: 'quiz', questions: [
+                { q: 'What is the typical printing temperature for PLA filament?', a: ['150-180°C', '190-220°C', '240-270°C', 'Above 300°C'], correct: '190-220°C' },
+                { q: 'What is a common bed temperature for printing PLA?', a: ['25°C (Room Temp)', '60°C', '110°C', '150°C'], correct: '60°C' },
+                { q: 'Which of the following is a flexible filament?', a: ['PLA', 'ABS', 'PETG', 'TPU'], correct: 'TPU' },
+                { q: 'What is the process of converting a 3D model (STL) into printer instructions (G-code) called?', a: ['Rendering', 'Slicing', 'Extruding', 'Modeling'], correct: 'Slicing' },
+                { q: 'What file format does a 3D printer directly read to print an object?', a: ['.STL', '.OBJ', '.GCODE', '.FBX'], correct: '.GCODE' },
+             ]}
+        ]},
+        { id: 'm3', name: 'Module 3: Advanced Techniques', chapters: [
+            { id: 'ch3-1', title: 'Advanced Slicer Settings', type: 'youtube', videoId: 'gpm4Fmh_OOc' },
+            { id: 'ch3-2', title: 'Troubleshooting Print Failures', type: 'pdf', description: 'A guide to fixing common issues like warping, stringing, and under-extrusion.', url: '#' },
+            { id: 'ch3-3', title: 'Assignment 3', type: 'quiz', questions: [ 
+                { q: 'What setting controls the density of a print?', a: ['Layer Height', 'Infill', 'Print Speed', 'Retraction'], correct: 'Infill' },
+                { q: 'What does "retraction" help prevent in a 3D print?', a: ['Warping', 'Poor Adhesion', 'Stringing', 'Cracking'], correct: 'Stringing' },
+                { q: 'Increasing layer height will do what?', a: ['Increase print time, decrease quality', 'Decrease print time, decrease quality', 'Increase print time, increase quality', 'Decrease print time, increase quality'], correct: 'Decrease print time, decrease quality' }
+            ]}
+        ]},
+        { id: 'm4', name: 'Module 4: Final Project', chapters: [
+            { id: 'ch4-1', title: 'Final Project Brief', type: 'pdf', description: 'Download the brief for your final project.', url: '#' },
+            { id: 'ch4-2', title: 'Final Assignment', type: 'quiz', questions: [ 
+                { q: 'Which step is most important for a successful print?', a: ['A cool room', 'A fast computer', 'A level bed', 'A bright light'], correct: 'A level bed' },
+                { q: 'What is a "brim" used for in 3D printing?', a: ['To make the print shiny', 'To improve bed adhesion', 'To cool the filament', 'To change color'], correct: 'To improve bed adhesion' },
+                { q: 'An STL file contains what kind of information?', a: ['The color of the model', 'The geometry of the model', 'The printer temperature settings', 'The speed of printing'], correct: 'The geometry of the model' }
+            ]}
+        ]},
+    ]},
+    '9': { id: 'c9', name: 'Robotics', modules: [ /* ... course data ... */ ]},
+};
+
+// --- CONTEXT API for Global State Management ---
+const AppContext = createContext();
+
+// Main App Component
+function App() {
+    // --- STATE MANAGEMENT ---
+    const [currentPage, setCurrentPage] = useState('landing');
+    const [teams, setTeams] = useState([
+        {
+            id: 'team0',
+            school: { id: 'globalpublicschool', name: 'Global Public School' },
+            schoolLocation: 'Kochi',
+            class: '8',
+            teamName: 'The Innovators',
+            students: ['Arun Kumar', 'Priya Sharma', 'David John']
+        },
+        {
+            id: 'team1',
+            school: { id: 'chinmayavidyalaya', name: 'Chinmaya Vidyalaya' },
+            schoolLocation: 'Thrissur',
+            class: '6',
+            teamName: 'The Microbe Hunters',
+            students: ['Amal', 'Adithya', 'Ribin', 'Jith', 'Rimju', 'Shinu', 'Rhithu', 'Varsha', 'Ananya']
+        }
+    ]);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [currentCourse, setCurrentCourse] = useState(null);
+    const [progress, setProgress] = useState({});
+    const [notification, setNotification] = useState({ show: false, message: '' });
+
+    // --- DATA HANDLING FUNCTIONS ---
+    const signUpTeam = (teamData) => {
+        const schoolId = teamData.school.name.toLowerCase().replace(/\s/g, '');
+        const newTeam = { 
+            ...teamData, 
+            id: team${teams.length + 1},
+            school: { id: schoolId, name: teamData.school.name }
+        };
+        setTeams(prevTeams => [...prevTeams, newTeam]);
+        showNotification(Team "${teamData.teamName}" registered successfully! Please log in.);
+        setCurrentPage('login');
+    };
+
+    const loginTeam = (credentials) => {
+        const foundTeam = teams.find(
+            team => team.school.id === credentials.schoolId &&
+                    team.class === credentials.class &&
+                    team.teamName === credentials.teamName
+        );
+
+        if (foundTeam) {
+            setCurrentUser(foundTeam);
+            const courseForClass = initialCourses[foundTeam.class];
+            setCurrentCourse(courseForClass);
+            if (!progress[foundTeam.id]) {
+                setProgress(prev => ({ ...prev, [foundTeam.id]: {} }));
+            }
+            return true;
+        }
+        showNotification('Invalid credentials. Please try again.');
+        return false;
+    };
+    
+    const logout = () => {
+        setCurrentUser(null);
+        setCurrentCourse(null);
+        setCurrentPage('landing');
+        showNotification("You have been logged out.");
+    };
+
+    const completeChapter = (chapterId) => {
+        if(!currentUser) return;
+        setProgress(prev => ({
+            ...prev,
+            [currentUser.id]: { ...prev[currentUser.id], [chapterId]: 'complete' }
+        }));
+    };
+    
+    const completeModule = (moduleId) => {
+        if(!currentUser) return;
+        setProgress(prev => ({
+            ...prev,
+            [currentUser.id]: { ...prev[currentUser.id], [moduleId]: 'complete' }
+        }));
+    };
+
+    const showNotification = (message) => {
+        setNotification({ show: true, message });
+        setTimeout(() => setNotification({ show: false, message: '' }), 4000);
+    };
+
+    // --- ROUTING ---
+    const renderPage = () => {
+        switch (currentPage) {
+            case 'signup': return <SignUpPage />;
+            case 'login': return <LoginPage />;
+            case 'dashboard': return <DashboardPage />;
+            case 'congratulations': return <CongratulationsPage />;
+            default: return <LandingPage />;
+        }
+    };
+
+    const contextValue = {
+        setCurrentPage,
+        signUpTeam,
+        loginTeam,
+        logout,
+        currentUser,
+        currentCourse,
+        progress,
+        completeChapter,
+        completeModule,
+        showNotification,
+        teams
+    };
+
+    return (
+        <AppContext.Provider value={contextValue}>
+            <div className="bg-slate-100 min-h-screen font-sans text-slate-800 relative">
+                {notification.show && <Notification message={notification.message} />}
+                {renderPage()}
+            </div>
+        </AppContext.Provider>
+    );
+}
+
+// --- SHARED HEADER COMPONENT ---
+function Header({ onBack }) {
+    const { logout } = useContext(AppContext);
+    return (
+        <header className="absolute top-0 right-0 p-4 flex gap-3 z-10">
+            {onBack && (
+                 <button onClick={onBack} className="text-sm bg-white text-slate-700 font-semibold py-2 px-4 rounded-lg shadow-sm border border-slate-300 hover:bg-slate-50 transition">
+                    ← Back
+                </button>
+            )}
+            <button onClick={logout} className="text-sm bg-red-500 text-white font-semibold py-2 px-4 rounded-lg shadow-sm hover:bg-red-600 transition">
+                Logout
+            </button>
+        </header>
+    );
+}
+
+
+// --- PAGES ---
+
+function LandingPage() {
+    const { setCurrentPage } = useContext(AppContext);
+    return (
+        <div className="flex flex-col items-center justify-center min-h-screen p-4 text-center bg-gradient-to-br from-sky-500 to-indigo-600">
+            <h1 className="text-6xl md:text-8xl font-bold text-white mb-4 drop-shadow-lg">STREAM COURSE</h1>
+            <p className="text-xl md:text-2xl text-indigo-200 mb-10 max-w-2xl">A One-Month Journey into Science, Technology, Robotics, Engineering, Arts, and Mathematics.</p>
+            <div className="flex flex-col sm:flex-row gap-4">
+                <button onClick={() => setCurrentPage('signup')} className="bg-white text-indigo-600 font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-indigo-100 transition-transform transform hover:scale-105">
+                    SIGN UP
+                </button>
+                <button onClick={() => setCurrentPage('login')} className="bg-indigo-500 text-white font-bold py-3 px-10 rounded-full text-lg shadow-lg hover:bg-indigo-400 transition-transform transform hover:scale-105">
+                    LOGIN
+                </button>
+            </div>
+        </div>
+    );
+}
+
+function SignUpPage() {
+    const { setCurrentPage, signUpTeam } = useContext(AppContext);
+    const [schoolName, setSchoolName] = useState('');
+    const [schoolLocation, setSchoolLocation] = useState('');
+    const [selectedClass, setSelectedClass] = useState('6');
+    const [teamName, setTeamName] = useState('');
+    const [students, setStudents] = useState(['']);
+
+    const handleAddStudent = () => setStudents([...students, '']);
+    
+    const handleStudentNameChange = (index, name) => {
+        const newStudents = [...students];
+        newStudents[index] = name;
+        setStudents(newStudents);
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (!schoolName || !selectedClass || !teamName || students.some(s => s.trim() === '')) {
+            alert('Please fill all fields, including all student names.');
+            return;
+        }
+        const teamData = { school: { name: schoolName }, schoolLocation, class: selectedClass, teamName, students };
+        signUpTeam(teamData);
+    };
+
+    return (
+        <div className="flex items-center justify-center min-h-screen p-4 bg-slate-50">
+            <Header onBack={() => setCurrentPage('landing')} />
+            <div className="w-full max-w-2xl mx-auto bg-white p-8 pt-16 rounded-2xl shadow-lg">
+                <h2 className="text-3xl font-bold text-center text-slate-700 mb-6">Create Your Team Account</h2>
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <InputField label="School Name" value={schoolName} onChange={(e) => setSchoolName(e.target.value)} required />
+                        <InputField label="School Location (City/Town)" value={schoolLocation} onChange={(e) => setSchoolLocation(e.target.value)} required />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <SelectField label="Class / Standard" value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)} options={[5,6,7,8,9,10]}/>
+                        <InputField label="Team Name" value={teamName} onChange={(e) => setTeamName(e.target.value)} placeholder="e.g., The Circuit Breakers" required />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-slate-600 mb-2">Student Names</label>
+                        {students.map((student, index) => (
+                            <InputField key={index} value={student} onChange={(e) => handleStudentNameChange(index, e.target.value)} placeholder={Student ${index + 1} Name} required className="mb-2" />
+                        ))}
+                        <button type="button" onClick={handleAddStudent} className="text-sm text-indigo-600 hover:text-indigo-800 font-semibold">+ Add Another Student</button>
+                    </div>
+                    <div className="flex items-center justify-end pt-4">
+                        <button type="submit" className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition">
+                            SUBMIT REGISTRATION
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    );
+}
+
+function LoginPage() {
+    const { setCurrentPage, loginTeam, teams, currentUser } = useContext(AppContext);
+    const [step, setStep] = useState(1);
+    const [credentials, setCredentials] = useState({ schoolId: '', class: '8', teamName: '' });
+    
+    const registeredSchools = [...new Map(teams.map(team => [team.school.id, team.school])).values()];
+
+    const availableTeams = teams
+        .filter(t => t.school.id === credentials.schoolId && t.class === credentials.class)
+        .map(t => t.teamName);
+
+    const handleLogin = (e) => {
+        e.preventDefault();
+        if (loginTeam(credentials)) {
+            setStep(2);
+        }
+    };
+
+    const handleStartLearning = () => {
+        setCurrentPage('dashboard');
+    };
+
+    if (step === 1) {
+        return (
+            <div className="flex items-center justify-center min-h-screen p-4 bg-slate-50">
+                <Header onBack={() => setCurrentPage('landing')} />
+                <div className="w-full max-w-md mx-auto bg-white p-8 pt-16 rounded-2xl shadow-lg">
+                    <h2 className="text-3xl font-bold text-center text-slate-700 mb-8">Team Login</h2>
+                    <form onSubmit={handleLogin} className="space-y-6">
+                        <SelectField 
+                            label="Select Your School" 
+                            value={credentials.schoolId} 
+                            onChange={(e) => setCredentials({...credentials, schoolId: e.target.value, teamName: ''})} 
+                            options={registeredSchools.map(s => ({ value: s.id, label: s.name }))} 
+                            required 
+                        />
+                        <SelectField 
+                            label="Select Your Class" 
+                            value={credentials.class} 
+                            onChange={(e) => setCredentials({...credentials, class: e.target.value, teamName: ''})} 
+                            options={[5,6,7,8,9,10]} 
+                            required 
+                        />
+                        <SelectField 
+                            label="Select Your Team Name" 
+                            value={credentials.teamName} 
+                            onChange={(e) => setCredentials({...credentials, teamName: e.target.value})} 
+                            options={availableTeams} 
+                            disabled={!credentials.schoolId || availableTeams.length === 0} 
+                            required 
+                        />
+                        <div className="flex items-center justify-end pt-4">
+                            <button type="submit" className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition">NEXT →</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        );
+    }
+
+    if (step === 2) {
+        return (
+            <div className="flex items-center justify-center min-h-screen p-4 bg-slate-50">
+                <Header onBack={() => setStep(1)} />
+                <div className="w-full max-w-md mx-auto bg-white p-8 pt-16 rounded-2xl shadow-lg">
+                    <h2 className="text-3xl font-bold text-center text-slate-700 mb-2">Mark Today's Attendance</h2>
+                    <p className="text-center text-slate-500 mb-8">{new Date().toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                    <div className="space-y-4">
+                        {currentUser?.students.map((student, index) => (
+                            <label key={index} className="flex items-center p-3 bg-slate-100 rounded-lg cursor-pointer hover:bg-slate-200 transition">
+                                <input type="checkbox" className="h-5 w-5 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                <span className="ml-4 text-lg text-slate-700">{student}</span>
+                            </label>
+                        ))}
+                    </div>
+                    <div className="flex items-center justify-end mt-8">
+                        <button onClick={handleStartLearning} className="bg-green-500 text-white font-bold py-3 px-10 rounded-lg shadow-md hover:bg-green-600 transition">START LEARNING →</button>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+function DashboardPage() {
+    const { currentUser, currentCourse, progress, setCurrentPage, logout } = useContext(AppContext);
+    const [activeChapter, setActiveChapter] = useState(null);
+
+    useEffect(() => {
+        if (currentCourse?.modules?.[0]?.chapters?.[0]) {
+            setActiveChapter(currentCourse.modules[0].chapters[0]);
+        }
+    }, [currentCourse]);
+
+    if (!currentUser || !currentCourse) {
+        return <div className="p-8">Loading...</div>;
+    }
+    
+    const userProgress = progress[currentUser.id] || {};
+    const allModulesComplete = currentCourse.modules.every(m => userProgress[m.id] === 'complete');
+
+    return (
+        <div className="flex flex-col md:flex-row min-h-screen">
+            <aside className="w-full md:w-1/4 bg-white p-6 border-r border-slate-200 shadow-md relative">
+                 <Header onBack={logout} />
+                <div className="mt-16">
+                    <h2 className="text-xl font-bold text-indigo-700">{currentCourse.name}</h2>
+                    <p className="text-sm text-slate-500 mb-6">Team: {currentUser.teamName}</p>
+                    <nav className="space-y-4">
+                        {currentCourse.modules.map((module, moduleIndex) => {
+                            const isModuleComplete = userProgress[module.id] === 'complete';
+                            const isUnlocked = moduleIndex === 0 || userProgress[currentCourse.modules[moduleIndex - 1]?.id] === 'complete';
+                            
+                            return (
+                                <div key={module.id}>
+                                    <h3 className={flex items-center justify-between font-bold text-lg ${isUnlocked ? 'text-slate-800' : 'text-slate-400'}}>
+                                        {module.name}
+                                        {isModuleComplete && <span className="text-green-500">✅</span>}
+                                        {!isUnlocked && <span className="text-slate-400 text-xs">🔒 LOCKED</span>}
+                                    </h3>
+                                    {isUnlocked && (
+                                        <ul className="mt-2 space-y-1 pl-4 border-l-2 border-slate-200">
+                                            {module.chapters.map(chapter => {
+                                                const isChapterComplete = userProgress[chapter.id] === 'complete';
+                                                return (
+                                                    <li key={chapter.id}>
+                                                        <button 
+                                                            onClick={() => setActiveChapter(chapter)}
+                                                            className={flex items-center w-full text-left p-1 rounded ${activeChapter?.id === chapter.id ? 'bg-indigo-100 text-indigo-700' : 'hover:bg-slate-100'}}
+                                                        >
+                                                            <span className={isChapterComplete ? 'text-green-500 mr-2' : 'text-slate-400 mr-2'}>
+                                                                {isChapterComplete ? '✓' : '•'}
+                                                            </span>
+                                                            {chapter.title}
+                                                        </button>
+                                                    </li>
+                                                );
+                                            })}
+                                        </ul>
+                                    )}
+                                </div>
+                            );
+                        })}
+                    </nav>
+                     {allModulesComplete && (
+                        <div className="mt-8">
+                            <button onClick={() => setCurrentPage('congratulations')} className="w-full bg-yellow-400 text-yellow-900 font-bold py-3 rounded-lg shadow-md hover:bg-yellow-500 transition">
+                                🎉 View Certificate 🎉
+                            </button>
+                        </div>
+                    )}
+                </div>
+            </aside>
+
+            <main className="flex-1 p-6 md:p-10 bg-slate-50">
+                {activeChapter ? <ChapterContent key={activeChapter.id} chapter={activeChapter} module={currentCourse.modules.find(m => m.chapters.includes(activeChapter))} setActiveChapter={setActiveChapter} /> : <div>Select a chapter to begin.</div>}
+            </main>
+        </div>
+    );
+}
+
+function ChapterContent({ chapter, module, setActiveChapter }) {
+    const { completeChapter, showNotification, progress, currentUser, currentCourse } = useContext(AppContext);
+    
+    const userProgress = progress[currentUser.id] || {};
+    const isChapterComplete = userProgress[chapter.id] === 'complete';
+
+    const findNextChapter = () => {
+        const currentModuleIndex = currentCourse.modules.findIndex(m => m.id === module.id);
+        const currentChapterIndex = module.chapters.findIndex(c => c.id === chapter.id);
+
+        if (currentChapterIndex < module.chapters.length - 1) {
+            return module.chapters[currentChapterIndex + 1];
+        }
+
+        if (currentModuleIndex < currentCourse.modules.length - 1) {
+            const nextModule = currentCourse.modules[currentModuleIndex + 1];
+            if (nextModule.chapters.length > 0) {
+                return nextModule.chapters[0];
+            }
+        }
+        return null;
+    };
+
+    const nextChapter = findNextChapter();
+
+    const handleMarkComplete = () => {
+        completeChapter(chapter.id);
+        showNotification(Chapter "${chapter.title}" marked as complete!);
+    };
+
+    const handleNext = () => {
+        if (nextChapter) {
+            const nextModule = currentCourse.modules.find(m => m.chapters.includes(nextChapter));
+            const currentModule = currentCourse.modules.find(m => m.chapters.includes(chapter));
+            if (nextModule.id !== currentModule.id) {
+                if(userProgress[currentModule.id] !== 'complete') {
+                    showNotification(You must complete the assignment for "${currentModule.name}" to proceed.);
+                    return;
+                }
+            }
+            setActiveChapter(nextChapter);
+        } else {
+             const allModulesComplete = currentCourse.modules.every(m => userProgress[m.id] === 'complete');
+             if(allModulesComplete) {
+                showNotification("Congratulations! You've finished all the chapters.");
+             }
+        }
+    };
+
+    const handleDownload = (e, url) => {
+        e.preventDefault();
+        window.open(url, '_blank');
+    }
+
+    const renderContent = () => {
+        switch (chapter.type) {
+            case 'youtube':
+                return <div className="aspect-w-16 aspect-h-9 bg-black rounded-lg shadow-lg overflow-hidden"><iframe className="w-full h-full" src={https://www.youtube.com/embed/${chapter.videoId}} title="YouTube video player" frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>;
+            case 'pdf':
+                return <div className="bg-white p-6 rounded-lg shadow"><p className="text-slate-600 mb-4">{chapter.description}</p><div className="h-96 bg-slate-200 rounded flex items-center justify-center text-slate-500 mb-4">PDF Viewer Placeholder</div><a href={chapter.url} onClick={(e) => handleDownload(e, chapter.url)} className="inline-block bg-blue-500 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-600 transition">📥 DOWNLOAD PDF</a></div>;
+            case 'task':
+                 return (
+                    <div className="bg-white p-6 rounded-lg shadow">
+                        <p className="text-slate-600 mb-4">{chapter.description}</p>
+                        {chapter.checklist && (
+                            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                                {chapter.checklist.map(item => (
+                                    <label key={item} className="flex items-center p-2 bg-slate-100 rounded-md">
+                                        <input type="checkbox" className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500" />
+                                        <span className="ml-3 text-sm text-slate-700">{item}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        )}
+                    </div>
+                );
+            case 'download':
+                 return <div className="bg-white p-6 rounded-lg shadow"><p className="text-slate-600 mb-4">{chapter.description}</p><a href={chapter.url} onClick={(e) => handleDownload(e, chapter.url)} className="inline-block bg-green-500 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-600 transition">📥 DOWNLOAD {chapter.fileName.toUpperCase()}</a></div>;
+            case 'quiz':
+                return <Quiz chapter={chapter} module={module} onQuizComplete={handleNext} />;
+            default:
+                return <p>Content type not recognized.</p>;
+        }
+    };
+
+    return (
+        <div className="max-w-4xl mx-auto">
+            <h1 className="text-4xl font-bold text-slate-800 mb-6">{chapter.title}</h1>
+            {renderContent()}
+            {chapter.type !== 'quiz' && (
+                <div className="mt-8 flex items-center justify-end gap-4">
+                    <button onClick={handleMarkComplete} disabled={isChapterComplete} className="bg-green-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-green-600 transition disabled:bg-green-300 disabled:cursor-not-allowed">
+                       {isChapterComplete ? '✓ Completed' : 'Mark as Complete'}
+                    </button>
+                    <button onClick={handleNext} disabled={!isChapterComplete || !nextChapter} className="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition disabled:bg-indigo-300 disabled:cursor-not-allowed">
+                        Next →
+                    </button>
+                </div>
+            )}
+        </div>
+    );
+}
+
+function Quiz({ chapter, module, onQuizComplete }) {
+    const { completeChapter, completeModule, showNotification, setCurrentPage, currentCourse } = useContext(AppContext);
+    const [answers, setAnswers] = useState({});
+    const [submitted, setSubmitted] = useState(false);
+    const [score, setScore] = useState(0);
+
+    const handleSubmit = () => {
+        let correctAnswers = chapter.questions.reduce((count, q, index) => answers[index] === q.correct ? count + 1 : count, 0);
+        const finalScore = (correctAnswers / chapter.questions.length) * 100;
+        setScore(finalScore);
+        setSubmitted(true);
+
+        if (finalScore >= 80) {
+            completeChapter(chapter.id);
+            const isLastChapterInModule = module.chapters[module.chapters.length - 1].id === chapter.id;
+            
+            if (isLastChapterInModule) {
+                completeModule(module.id);
+                const isLastModuleInCourse = currentCourse.modules[currentCourse.modules.length - 1].id === module.id;
+                if(isLastModuleInCourse) {
+                    // We don't navigate away here, just show notification. The user will click "Next ->"
+                    showNotification(🎉 Congratulations! You have completed the entire course!);
+                } else {
+                    showNotification(🎉 Module "${module.name}" complete! The next module is unlocked.);
+                }
+            } else {
+                showNotification(Quiz passed! Score: ${finalScore.toFixed(0)}%);
+            }
+        } else {
+            showNotification(Quiz failed. Score: ${finalScore.toFixed(0)}%. Please review and retry.);
+        }
+    };
+
+    const handleNextAfterQuiz = () => {
+        const isLastModuleInCourse = currentCourse.modules[currentCourse.modules.length - 1].id === module.id;
+        if(isLastModuleInCourse) {
+            setCurrentPage('congratulations');
+        } else {
+            onQuizComplete();
+        }
+    }
+
+    return (
+        <div className="bg-white p-8 rounded-lg shadow">
+            {!submitted ? (
+                <>
+                    {chapter.questions.map((q, qIndex) => (
+                        <div key={qIndex} className="mb-6">
+                            <p className="font-semibold text-lg mb-2">{qIndex + 1}. {q.q}</p>
+                            <div className="space-y-2">
+                                {q.a.map((option, oIndex) => (
+                                    <label key={oIndex} className="flex items-center p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition has-[:checked]:bg-indigo-100 has-[:checked]:ring-2 ring-indigo-400">
+                                        <input type="radio" name={q${qIndex}} value={option} onChange={() => setAnswers({...answers, [qIndex]: option})} className="h-4 w-4 text-indigo-600 border-gray-300 focus:ring-indigo-500" />
+                                        <span className="ml-3 text-slate-700">{option}</span>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    ))}
+                    <button onClick={handleSubmit} className="bg-green-500 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-green-600 transition">SUBMIT ANSWERS</button>
+                </>
+            ) : (
+                <div className="text-center">
+                    <h3 className="text-2xl font-bold mb-4">Quiz Results</h3>
+                    <p className={text-5xl font-bold mb-4 ${score >= 80 ? 'text-green-500' : 'text-red-500'}}>{score.toFixed(0)}%</p>
+                    <p className="text-slate-600">{score >= 80 ? 'Excellent work! You have passed.' : 'Please review the module and try again.'}</p>
+                    {score < 80 && <button onClick={() => { setSubmitted(false); setAnswers({}); }} className="mt-6 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg">Retry Quiz</button>}
+                    {score >= 80 && <button onClick={handleNextAfterQuiz} className="mt-6 bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg shadow-md hover:bg-indigo-700 transition">Next →</button>}
+                </div>
+            )}
+        </div>
+    );
+}
+
+const Firework = () => {
+  const fireworks = Array.from({ length: 15 });
+  return (
+    <div className="fireworks">
+      {fireworks.map((_, i) => (
+        <div className="firework" key={i} style={{'--i': i}}></div>
+      ))}
+    </div>
+  );
+};
+
+function CongratulationsPage() {
+    const { currentUser, currentCourse, setCurrentPage, showNotification } = useContext(AppContext);
+    const [certIndex, setCertIndex] = useState(0);
+
+    if (!currentUser || !currentCourse) return null;
+
+    const currentStudent = currentUser.students[certIndex];
+    
+    const handleDownloadAll = () => {
+        showNotification("Preparing download... (This is a simulation)");
+    }
+
+    return (
+        <div className="relative flex flex-col items-center justify-center min-h-screen p-4 bg-gray-900 overflow-hidden">
+            <Firework />
+            <Header onBack={() => setCurrentPage('dashboard')} />
+             <div className="text-center z-10">
+                <h1 className="text-5xl font-bold text-center text-yellow-300 mb-4 mt-16 animate-pulse">Congratulations, Team "{currentUser.teamName}"!</h1>
+                <p className="text-center text-lg text-slate-300 mb-8">You have successfully completed the <strong>{currentCourse.name}</strong> course. Here are your certificates.</p>
+             </div>
+            
+            <div className="flex items-center justify-center gap-4 z-10 w-full max-w-2xl">
+                <button 
+                    onClick={() => setCertIndex(i => i - 1)} 
+                    disabled={certIndex === 0}
+                    className="bg-white/20 text-white p-4 rounded-full disabled:opacity-30 hover:bg-white/30 transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                </button>
+
+                <div className="w-full max-w-lg bg-white border-8 border-yellow-400 p-6 rounded-lg shadow-2xl text-center relative aspect-[4/3] flex flex-col justify-center">
+                    <div className="absolute top-2 right-2 text-4xl opacity-50">📜</div>
+                    <div className="absolute bottom-2 left-2 text-4xl opacity-50">🎓</div>
+                    <h2 className="text-sm font-bold text-gray-700 uppercase tracking-widest">Certificate of Completion</h2>
+                    <p className="text-xs text-slate-500 my-2">This is to certify that</p>
+                    <p className="text-3xl font-serif text-gray-900">{currentStudent}</p>
+                    <p className="text-xs text-slate-500 mt-2">of {currentUser.school.name} (Class {currentUser.class}) has successfully completed the one-month course in</p>
+                    <p className="text-xl font-semibold text-gray-800 mt-1">{currentCourse.name}</p>
+                    <div className="mt-4 text-xs text-slate-400">
+                        <p>Date: {new Date().toLocaleDateString('en-IN')}</p>
+                        <p>STREAM Course Inc.</p>
+                    </div>
+                </div>
+
+                 <button 
+                    onClick={() => setCertIndex(i => i + 1)} 
+                    disabled={certIndex === currentUser.students.length - 1}
+                    className="bg-white/20 text-white p-4 rounded-full disabled:opacity-30 hover:bg-white/30 transition"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+            <div className="mt-8 text-center z-10">
+                <button onClick={handleDownloadAll} className="bg-green-500 text-white font-bold py-3 px-8 rounded-lg shadow-lg hover:bg-green-600 transition">
+                    📥 Download all certificates as PDF file
+                </button>
+                <p className="text-slate-400 text-sm mt-2">You can take a print out</p>
+            </div>
+        </div>
+    );
+}
+
+
+// --- UTILITY COMPONENTS ---
+const InputField = ({ label, className, ...props }) => (
+    <div className={className}>
+        {label && <label className="block text-sm font-medium text-slate-600 mb-1">{label}</label>}
+        <input className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md shadow-sm placeholder-slate-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" {...props} />
+    </div>
+);
+
+const SelectField = ({ label, options, ...props }) => (
+    <div>
+        <label className="block text-sm font-medium text-slate-600 mb-1">{label}</label>
+        <select className="block w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 disabled:bg-slate-200" {...props}>
+             <option value="" disabled>-- Select --</option>
+            {options.map((opt, index) => (
+                typeof opt === 'object' 
+                ? <option key={opt.value || index} value={opt.value}>{opt.label}</option> 
+                : <option key={index} value={opt}>{opt}</option>
+            ))}
+        </select>
+    </div>
+);
+
+const Notification = ({ message }) => (
+    <div className="fixed top-5 right-5 bg-green-500 text-white py-3 px-6 rounded-lg shadow-lg animate-fade-in-out z-50">
+        {message}
+    </div>
+);
+
+export default App;
