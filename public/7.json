@@ -1,5 +1,70 @@
 {
     "id": "c7",
     "name": "LED Repairing",
-    "modules": []
+    "modules": [
+        {
+            "id": "m1",
+            "name": "Module 1: Introduction to LEDs",
+            "chapters": [
+                {
+                    "id": "ch1-1",
+                    "title": "What is an LED?",
+                    "type": "video"
+                },
+                {
+                    "id": "ch1-2",
+                    "title": "Types of LEDs (PDF)",
+                    "type": "pdf",
+                    "description": "A document covering different types of LEDs.",
+                    "url": "#"
+                },
+                {
+                    "id": "ch1-3",
+                    "title": "Assignment 1: Identify LEDs",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What does LED stand for?",
+                            "a": [
+                                "Light Emitting Diode",
+                                "Light Emitting Device",
+                                "Low Energy Diode",
+                                "Light Emitting Display"
+                            ],
+                            "correct": "Light Emitting Diode"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "m2",
+            "name": "Module 2: Basic LED Circuits",
+            "chapters": [
+                {
+                    "id": "ch2-1",
+                    "title": "Simple LED Circuit",
+                    "type": "task",
+                    "description": "Learn to build a simple circuit to light up an LED."
+                },
+                {
+                    "id": "ch2-2",
+                    "title": "Assignment 2: Build a Circuit",
+                    "type": "quiz",
+                    "questions": [
+                        {
+                            "q": "What component is used to limit current in an LED circuit?",
+                            "a": [
+                                "Capacitor",
+                                "Resistor",
+                                "Transistor",
+                                "Inductor"
+                            ],
+                            "correct": "Resistor"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
 }
